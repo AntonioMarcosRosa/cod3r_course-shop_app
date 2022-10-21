@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop/components/app_drawer.dart';
+import 'package:shop/models/product_list.dart';
 import 'package:shop/utils/app_routes.dart';
 import '../components/badge.dart';
 import '../components/product_grid.dart';
@@ -20,6 +21,23 @@ class ProductOverviewPage extends StatefulWidget {
 
 class _ProductOverviewPageState extends State<ProductOverviewPage> {
   bool _showFavoriteOnly = false;
+  bool _isLoading = true;
+
+  Future<void> _refreshProducts() {
+    return Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(context, listen: false)
+        .loadProducts()
+        .then((value) => setState(() => _isLoading = false));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,14 +71,19 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
               },
               icon: const Icon(Icons.shopping_cart),
             ),
-            builder: (ctx, cart, child) => Badge( 
+            builder: (ctx, cart, child) => Badge(
               value: cart.itemsCount.toString(),
               child: child!,
             ),
           ),
         ],
       ),
-      body: ProductGrid(_showFavoriteOnly),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: () => _refreshProducts(),
+              child: ProductGrid(_showFavoriteOnly),
+            ),
       drawer: const AppDrawer(),
     );
   }

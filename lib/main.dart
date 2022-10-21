@@ -36,7 +36,7 @@ class ShopApp extends StatelessWidget {
         title: 'Shop App',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.purple,
+            primary: Colors.black87,
             secondary: Colors.deepOrange,
           ),
           fontFamily: 'Lato',
