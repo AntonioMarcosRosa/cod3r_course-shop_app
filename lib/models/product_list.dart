@@ -26,19 +26,21 @@ class ProductList with ChangeNotifier {
     _items.clear();
 
     Map<String, dynamic> data = jsonDecode(response.body);
-
-    data.forEach((productId, productData) {
-      _items.add(
-        Product(
-          id: productId,
-          name: productData['name'],
-          description: productData['description'],
-          price: productData['price'],
-          imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
-        ),
-      );
-    });
+    
+    if (response.statusCode < 400) {
+      data.forEach((productId, productData) {
+        _items.add(
+          Product(
+            id: productId,
+            name: productData['name'],
+            description: productData['description'],
+            price: productData['price'],
+            imageUrl: productData['imageUrl'],
+            isFavorite: productData['isFavorite'],
+          ),
+        );
+      });
+    }
     notifyListeners();
   }
 
@@ -86,7 +88,8 @@ class ProductList with ChangeNotifier {
   Future<void> updateProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
-    await http.patch(Uri.parse('${Constants.productBaseUrl}/${product.id}.json'),
+    await http.patch(
+        Uri.parse('${Constants.productBaseUrl}/${product.id}.json'),
         body: jsonEncode({
           "name": product.name,
           "price": product.price,
