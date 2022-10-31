@@ -5,6 +5,7 @@ import 'package:shop/models/product_list.dart';
 import 'package:shop/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
+import '../models/auth.dart';
 import '../models/cart.dart';
 
 class ProductGridItem extends StatelessWidget {
@@ -16,6 +17,7 @@ class ProductGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: true);
     final cart = Provider.of<Cart>(context);
+    final auth = Provider.of<Auth>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
@@ -27,7 +29,10 @@ class ProductGridItem extends StatelessWidget {
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
               onPressed: () async {
                 try {
-                  await product.toggleFavorite();
+                  await product.toggleFavorite(
+                    auth.token ?? '',
+                    auth.userId ?? '',
+                  );
                 } on HttpException catch (error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

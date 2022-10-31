@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/exceptions/auth_exception.dart';
 
 import '../models/auth.dart';
 
@@ -16,7 +17,7 @@ class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  AuthMode _authMode = AuthMode.signUp;
+  AuthMode _authMode = AuthMode.signIn;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -40,13 +41,34 @@ class _AuthFormState extends State<AuthForm> {
     _formKey.currentState?.save();
     Auth auth = Provider.of<Auth>(context, listen: false);
 
-    if (_isSingIn()) {
-      await auth.singIn(_authData['email']!, _authData['password']!);
-    } else {
-      await auth.singUp(_authData['email']!, _authData['password']!);
+    try {
+      if (_isSingIn()) {
+        await auth.singIn(_authData['email']!, _authData['password']!);
+      } else {
+        await auth.singUp(_authData['email']!, _authData['password']!);
+      }
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog('Ocorreu um erro inesperado.');
     }
 
     setState(() => _isLoading = false);
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Ocorreu um Erro'),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
   }
 
   @override
