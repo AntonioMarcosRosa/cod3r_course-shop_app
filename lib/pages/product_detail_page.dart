@@ -15,39 +15,50 @@ class ProductDetailPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-          child: Column(
-        children: [
-          SizedBox(
-            height: 300,
-            width: double.infinity,
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 300,
+              width: double.infinity,
+              child: Hero(
+                tag: product.id,
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            'R\$ ${product.price}',
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
+            const SizedBox(
+              height: 8,
             ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            width: double.infinity,
-            child: Text(
-              product.description,
+            Text(
+              'R\$ ${product.price}',
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              width: double.infinity,
+              child: Text(
+                product.description,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(
+              height: 1000,
+            ),
+            const Text(
+              'FIM',
               textAlign: TextAlign.center,
-            ),
-          )
-        ],
-      )),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
