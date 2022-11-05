@@ -12,6 +12,7 @@ import 'package:shop/pages/product_form_page.dart';
 import 'package:shop/pages/products_page.dart';
 import 'package:shop/pages/products_overview_page.dart';
 import 'package:shop/utils/app_routes.dart';
+import 'package:shop/utils/custom_route.dart';
 
 import 'models/auth.dart';
 
@@ -54,17 +55,20 @@ class ShopApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Shop App',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.black87,
-            secondary: Colors.deepOrange,
-          ),
-          textTheme: const TextTheme(
-            headline6: TextStyle(
-              color: Colors.white,
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+              primary: Colors.black87,
+              secondary: Colors.deepOrange,
             ),
-          ),
-          fontFamily: 'Lato',
-        ),
+            textTheme: const TextTheme(
+              headline6: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            fontFamily: 'Lato',
+            pageTransitionsTheme: PageTransitionsTheme(builders: {
+              TargetPlatform.android: CustomPageTransitionBuilder(),
+              TargetPlatform.iOS: CustomPageTransitionBuilder(),
+            })),
         routes: {
           AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),
           AppRoutes.productDetail: (ctx) => const ProductDetailPage(),
